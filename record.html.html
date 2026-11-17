@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recco - AI จดโน้ตบทเรียนและประชุมอัจฉริยะ</title>
+    <!-- Tailwind CSS สำหรับตกแต่งดีไซน์ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontPrompt สำหรับฟอนต์ภาษาไทยที่สวยงาม -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">R</div>
+                <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Recco</span>
+                <span class="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-medium hidden sm:inline-block">by Next Pixel</span>
+            </div>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium text-slate-600">
+                <a href="#features" class="hover:text-indigo-600 transition">ฟังก์ชันหลัก</a>
+                <a href="#recorder" class="hover:text-indigo-600 transition">ทดลองใช้งาน</a>
+                <a href="#devices" class="hover:text-indigo-600 transition">อุปกรณ์ที่รองรับ</a>
+            </nav>
+            <div>
+                <a href="#recorder" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-sm transition">เริ่มต้นใช้งาน</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-b from-indigo-50/50 to-white py-16 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <span class="bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block">AI Note Taker & Summarizer</span>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-6">
+                เปลี่ยนเสียงพูด เป็น<span class="text-indigo-600">สรุปอัจฉริยะ</span>ใน 30 วินาที
+            </h1>
+            <p class="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
+                บันทึกเสียงการประชุม บทเรียน พอดแคสต์ หรือลิงก์ YouTube ถอดความอัตโนมัติ สรุปประเด็น สร้าง To-do List และทำ Quiz ได้ทันที
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#recorder" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-3 rounded-xl shadow-lg shadow-indigo-200 transition">เริ่มบันทึกเสียงตอนนี้</a>
+                <a href="#features" class="bg-white hover:bg-slate-50 text-slate-700 font-medium px-6 py-3 rounded-xl border border-slate-200 transition">ดูฟังก์ชันทั้งหมด</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Workspace / Recorder & AI Section -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full" id="recorder">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Panel: Input / Recording Controls -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm lg:col-span-1 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round5" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                        ช่องทางนำเข้าข้อมูล
+                    </h2>
+
+                    <!-- Tabs or Input Options -->
+                    <div class="space-y-4">
+                        <!-- Record Audio -->
+                        <div class="p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300 text-center">
+                            <div id="mic-status" class="text-sm font-medium text-slate-600 mb-3">กดปุ่มเพื่อเริ่มอัดเสียงประชุม/บทเรียน</div>
+                            <button id="record-btn" onclick="toggleRecording()" class="w-14 h-14 bg-red-500 hover:bg-red-600 text-white rounded-full mx-auto flex items-center justify-center shadow-md transition transform active:scale-95">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                            </button>
+                        </div>
+
+                        <!-- YouTube Link Input -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">หรือใส่ลิงก์ YouTube</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="youtube-link" placeholder="https://youtube.com/watch?v=..." class="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <button onclick="processYouTube()" class="bg-slate-800 hover:bg-slate-900 text-white px-3 py-2 rounded-lg text-sm font-medium transition">ดึงข้อมูล</button>
+                            </div>
+                        </div>
+
+                        <!-- Language Selector -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">ภาษาของเสียง / แปลภาษา</label>
+                            <select id="language-select" class="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                                <option value="th">🇹🇭 ไทย (Thai)</option>
+                                <option value="en">🇬🇧 อังกฤษ (English)</option>
+                                <option value="zh">🇨🇳 จีน (Chinese)</option>
+                                <option value="ja">🇯🇵 ญี่ปุ่น (Japanese)</option>
+                                <option value="ko">🇰🇷 เกาหลี (Korean)</option>
+                                <option value="es">🇪🇸 สเปน (Spanish)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-100">
+                    <button onclick="simulateAIProcessing()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl shadow-md transition flex items-center justify-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round5" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <span>ประมวลผลสรุปด้วย AI (30 วิ)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel: AI Output & Features View -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col">
+                
+                <!-- Output Navigation Tabs -->
+                <div class="flex flex-wrap border-b border-slate-200 mb-6 gap-2" id="output-tabs">
+                    <button onclick="switchTab('summary')" class="tab-btn px-4 py-2 text-sm font-semibold text-indigo-600 border-b-2 border-indigo-600 transition">สรุปใจความสำคัญ</button>
+                    <button onclick="switchTab('transcript')" class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-indigo-600 transition">ถอดข้อความ (Transcript)</button>
+                    <button onclick="switchTab('todo')" class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-indigo-600 transition">To-do List</button>
+                    <button onclick="switchTab('quiz')" class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-indigo-600 transition">แบบทดสอบ (Quiz)</button>
+                    <button onclick="switchTab('chat')" class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-indigo-600 transition">ถาม-ตอบ AI</button>
+                </div>
+
+                <!-- Tab Contents Container -->
+                <div class="flex-grow overflow-y-auto max-h-[500px] pr-2" id="tab-content-container">
+                    
+                    <!-- 1. Summary View -->
+                    <div id="content-summary" class="tab-content space-y-4">
+                        <div class="bg-indigo-50/60 p-4 rounded-xl border border-indigo-100">
+                            <h3 class="font-bold text-indigo-900 text-base mb-1">🎯 สรุปภาพรวม (Executive Summary)</h3>
+                            <p class="text-sm text-slate-700">การประชุมหารือโปรเจกต์ Recco แอป AI Note Taker มุ่งเน้นการเพิ่มประสิทธิภาพการทำงานและลดเวลาในการจดบันทึก โดยสรุปฟีเจอร์หลักและการเตรียมตัวเปิดให้บริการข้ามอุปกรณ์ในระบบนิเวศของ Apple</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-slate-800 mb-2">📌 ประเด็นสำคัญ (Key Points):</h4>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1.5 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <li>พัฒนาโดยทีมงาน Next Pixel Limited เน้นความเร็วในการสรุปผลภายใน 30 วินาที</li>
+                               <li>รองรับการแปลงเสียงพูดเป็นข้อความพร้อมแปลภาษาได้หลากหลาย (จีน, อังกฤษ, ญี่ปุ่น ฯลฯ)</li>
+                               <li>เพิ่มฟีเจอร์สร้าง Quiz อัตโนมัติสำหรับกลุ่มผู้ใช้งานสายการเรียนรู้</li>
+                               <li>รองรับการใช้งานร่วมกันบน iPhone, iPad, Apple Watch และ Mac (Apple Silicon)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 2. Transcript View -->
+                    <div id="content-transcript" class="tab-content hidden space-y-3">
+                        <div class="text-xs text-slate-400 font-medium">00:00 - เริ่มต้นบันทึกเสียง</div>
+                        <p class="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg">"สวัสดีครับทุกคน วันนี้เรามาคุยกันถึงเรื่องโปรเจกต์แอปพลิเคชัน Recco ที่พัฒนาโดย Next Pixel Limited กันนะครับ..."</p>
+                        <div class="text-xs text-slate-400 font-medium">00:45 - การทำงานของระบบ AI</div>
+                        <p class="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg">"...ระบบจะทำการถอดเสียงและสรุปใจความสำคัญให้อย่างรวดเร็วภายใน 30 วินาที พร้อมสร้าง To-do list ให้ทีมงานติดตามงานต่อได้ทันที"</p>
+                    </div>
+
+                    <!-- 3. To-do List View -->
+                    <div id="content-todo" class="tab-content hidden space-y-3">
+                        <h3 class="font-bold text-slate-800 mb-2">✅ รายการสิ่งที่ต้องทำ (Action Items)</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center space-x-3 p-3 bg-slate-50 rounded-xl border border-slate-100 cursor-pointer hover:bg-slate-100 transition">
+                                <input type="checkbox" checked class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500">
+                                <span class="text-sm text-slate-700 line-through">ตรวจสอบความเสถียรระบบถอดเสียงภาษาไทยและอังกฤษ</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 bg-slate-50 rounded-xl border border-slate-100 cursor-pointer hover:bg-slate-100 transition">
+                                <input type="checkbox" class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500">
+                                <span class="text-sm text-slate-700">ทดสอบฟังก์ชัน Quiz Generation สำหรับหมวดหมู่การเรียน</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 bg-slate-50 rounded-xl border border-slate-100 cursor-pointer hover:bg-slate-100 transition">
+                                <input type="checkbox" class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500">
+                                <span class="text-sm text-slate-700">เตรียมปล่อยอัปเดตเวอร์ชันรองรับ Mac (Apple Silicon)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 4. Quiz Generation View -->
+                    <div id="content-quiz" class="tab-content hidden space-y-4">
+                        <h3 class="font-bold text-slate-800 mb-2">🧠 แบบทดสอบทบทวนความรู้ (AI Quiz)</h3>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                            <p class="text-sm font-semibold text-slate-900">คำถามที่ 1: แอป Recco พัฒนาโดยบริษัทใด?</p>
+                            <div class="space-y-2 text-sm text-slate-700">
+                                <label class="block p-2 bg-white rounded border border-slate-200 hover:border-indigo-500 cursor-pointer"><input type="radio" name="q1" class="mr-2"> ก. Next Pixel Limited</label>
+                                <label class="block p-2 bg-white rounded border border-slate-200 hover:border-indigo-500 cursor-pointer"><input type="radio" name="q1" class="mr-2"> ข. Apple Inc.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. AI Chat View -->
+                    <div id="content-chat" class="tab-content hidden flex flex-col h-[350px] justify-between">
+                        <div class="space-y-3 overflow-y-auto mb-4 pr-2">
+                            <div class="flex items-start space-x-2">
+                                <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">AI</div>
+                                <div class="bg-slate-100 p-3 rounded-xl text-sm text-slate-700 max-w-[80%]">สวัสดีครับ! มีข้อสงสัยอะไรเกี่ยวกับบทเรียนหรือการประชุมนี้ ถามผมได้เลยครับ</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="พิมพ์คำถามเกี่ยวกับเนื้อหานี้..." class="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">ส่ง</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Features Overview Section -->
+    <section id="features" class="bg-white py-16 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 mb-3">ฟังก์ชันหลักของแอป Recco</h2>
+                <p class="text-slate-600">เครื่องมือครบครันสำหรับนักเรียน นักศึกษา และคนทำงานยุคใหม่</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-md transition">
+                    <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center font-bold mb-4">🎙️</div>
+                    <h3 class="font-bold text-slate-900 mb-2">อัดเสียงและถอดเสียงอัตโนมัติ</h3>
+                    <p class="text-sm text-slate-600">บันทึกเสียงประชุม เรียน พอดแคสต์ หรือดึงลิงก์จาก YouTube แปลงเสียงพูดให้เป็นข้อความทันที</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-md transition">
+                    <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center font-bold mb-4">⚡</div>
+                    <h3 class="font-bold text-slate-900 mb-2">สรุปประเด็นด้วย AI (ภายใน 30 วิ)</h3>
+                    <p class="text-sm text-slate-600">ย่อยเนื้อหายาวๆ ให้เป็นข้อความกระชับ จัดรูปแบบทั้ง Key Points หรือ Mind Map เข้าใจง่าย</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-md transition">
+                    <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center font-bold mb-4">📋</div>
+                    <h3 class="font-bold text-slate-900 mb-2">สร้าง To-do List อัตโนมัติ</h3>
+                    <p class="text-sm text-slate-600">สกัดแอ็กชันไอเทมและงานติดตามจากการประชุมหรือบทเรียนให้นำไปต่อยอดได้ทันที</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-md transition">
+                    <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center font-bold mb-4">🧠</div>
+                    <h3 class="font-bold text-slate-900 mb-2">สร้างแบบทดสอบ (Quiz)</h3>
+                    <p class="text-sm text-slate-600">แปลงเนื้อหาการเรียนเป็นควิซสำหรับฝึกทำทบทวนความรู้ด้วยตนเองได้อย่างมีประสิทธิภาพ</p>
+                </div>
+                <!-- Feature 5 -->
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-md transition">
+                    <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center font-bold mb-4">💬</div>
+                    <h3 class="font-bold text-slate-900 mb-2">ผู้ช่วย AI ถาม-ตอบ (Ask AI)</h3>
+                    <p class="text-sm text-slate-600">พิมพ์ถามคำถามเจาะจงลงในเนื้อหาที่บันทึกไว้ เหมือนมีผู้ช่วยส่วนตัวคอยตอบข้อสงสัย</p>
+                </div>
+                <!-- Feature 6 -->
+                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-md transition">
+                    <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center font-bold mb-4">🌐</div>
+                    <h3 class="font-bold text-slate-900 mb-2">รองรับหลากหลายภาษา</h3>
+                    <p class="text-sm text-slate-600">รองรับการแปลภาษาและถอดความภาษาจีน, อังกฤษ, ญี่ปุ่น, สเปน, เกาหลี และอื่นๆ อีกมากมาย</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Multi-device Section -->
+    <section id="devices" class="bg-indigo-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-4">ใช้งานได้ทุกอุปกรณ์ ข้ามแพลตฟอร์มอย่างไร้รอยต่อ</h2>
+            <p class="text-indigo-200 mb-8 max-w-xl mx-auto">จดบันทึกและฟังย้อนหลังได้จากทุกที่ ไม่ว่าจะเป็น iPhone, iPad, Apple Watch หรือ Mac (Apple Silicon)</p>
+            <div class="flex flex-wrap justify-center gap-4 text-sm font-medium">
+                <span class="bg-indigo-800/80 px-4 py-2 rounded-xl border border-indigo-700">📱 iPhone</span>
+                <span class="bg-indigo-800/80 px-4 py-2 rounded-xl border border-indigo-700">📱 iPad</span>
+                <span class="bg-indigo-800/80 px-4 py-2 rounded-xl border border-indigo-700">⌚ Apple Watch</span>
+                <span class="bg-indigo-800/80 px-4 py-2 rounded-xl border border-indigo-700">💻 Mac (Apple Silicon)</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p>&copy; 2026 Recco by Next Pixel Limited. สงวนลิขสิทธิ์ทุกประการ</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Interactive Scripts -->
+    <script>
+        let isRecording = false;
+
+        function toggleRecording() {
+            isRecording = !isRecording;
+            const btn = document.getElementById('record-btn');
+            const status = document.getElementById('mic-status');
+            
+            if (isRecording) {
+                btn.classList.add('animate-pulse', 'bg-red-700');
+                status.textContent = "กำลังบันทึกเสียง... (คลิกอีกครั้งเพื่อหยุด)";
+                status.classList.add('text-red-600', 'font-bold');
+            } else {
+                btn.classList.remove('animate-pulse', 'bg-red-700');
+                status.textContent = "บันทึกเสียงเสร็จสิ้น! พร้อมกดประมวลผล AI";
+                status.classList.remove('text-red-600', 'font-bold');
+            }
+        }
+
+        function processYouTube() {
+            const link = document.getElementById('youtube-link').value;
+            if(!link) {
+                alert('กรุณากรอกลิงก์ YouTube ก่อนครับ');
+                return;
+            }
+            alert('ระบบกำลังดึงข้อมูลจาก YouTube และส่งให้ AI สด...');
+            simulateAIProcessing();
+        }
+
+        function simulateAIProcessing() {
+            alert('AI กำลังสรุปข้อมูล ถอดความ และสร้าง To-do List (จำลองการทำงานเสร็จใน 30 วินาที)...');
+            switchTab('summary');
+        }
+
+        function switchTab(tabName) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            // Remove active styles from tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600', 'font-semibold');
+                btn.classList.add('text-slate-500', 'font-medium');
+            });
+            // Show selected content
+            document.getElementById('content-' + tabName).classList.remove('hidden');
+            
+            // Highlight clicked tab (find by text or index)
+            event.target.classList.add('text-indigo-600', 'border-b-2', 'border-indigo-600', 'font-semibold');
+            event.target.classList.remove('text-slate-500');
+        }
+    </script>
+</body>
+</html>
